@@ -1,0 +1,28 @@
+vocabulary V {
+	type Person
+	type Man isa Person
+	type Woman isa Person
+	Married(Man ,Woman)
+	WifeOf(Man ) : Woman
+}
+
+theory T: V {
+    ! m [Man]: ? w [Woman]: Married(m,w).
+    ! m [Man] w1 [Woman] w2 [Woman]: Married(m,w1) & 
+    	Married(m,w2)
+    	=> w1 = w2.
+}
+
+structure S: V {
+    Man={Jos;Jef}
+    Woman={1..7}
+    WifeOf={Jos-> 1; Jef -> 5}
+}
+
+procedure main(){
+    explainunsat(T,S)
+    stdoptions.nbmodels = 5
+    sols = modelexpand(T,S)
+    print(sols[3])
+    printmodels(sols)
+}
